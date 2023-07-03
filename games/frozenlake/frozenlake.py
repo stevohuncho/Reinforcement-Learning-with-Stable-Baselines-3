@@ -23,20 +23,21 @@ class FrozenLake:
             eval_env=self.env,
             eval_freq=freq//self.num_envs,
             n_eval_episodes=eval_eps,
-            log_path=log_path
+            log_path=log_path,
+            best_model_save_path=log_path
         )
         
     def set_model(self, model: DQN):
         self.model = model
 
-    def train(self, steps, log_name, eval_callback = None):
+    def train(self, steps, log_name = "DQN", eval_callback = None):
         if hasattr(self, "model"):
             self.model: DQN = self.model.learn(
                 total_timesteps=steps, 
                 callback=eval_callback, 
                 log_interval=1,
                 progress_bar=True,
-                tb_log_name=log_name
+                tb_log_name=log_name,
             )
 
     def save_model(self, path: str):
