@@ -30,14 +30,14 @@ class FrozenLake:
     def set_model(self, model: DQN):
         self.model = model
 
-    def train(self, steps, log_name = "DQN", eval_callback = None):
+    def train(self, steps, eval_callback = None, log_name: str = "DQN"):
         if hasattr(self, "model"):
             self.model: DQN = self.model.learn(
                 total_timesteps=steps, 
                 callback=eval_callback, 
                 log_interval=1,
                 progress_bar=True,
-                tb_log_name=log_name,
+                tb_log_name=log_name
             )
 
     def save_model(self, path: str):
