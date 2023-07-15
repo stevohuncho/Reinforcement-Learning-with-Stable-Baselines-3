@@ -1,6 +1,7 @@
 from stable_baselines3 import DQN
 from games.frozenlake.frozenlake import FrozenLake
 from gymnasium.envs.toy_text.frozen_lake import generate_random_map
+from transfer_learning.train import frozen_lake_transfer_learn
 from games.frozenlake.env import frozen_lake_dummy_vec_env
 from datetime import datetime
 from transfer_learning.map_resizer import MapResizer
@@ -36,8 +37,9 @@ def main():
     map8x8: list[str] = ['FFFFHHFF', 'FFHFFHFF', 'HFFFFFFF', 'HHFFFFHH', 'GFFFFFFF', 'HHFFFFFF', 'HHFFFFSH', 'HHFFFFHH']
 
 
-    env_4x4 = frozen_lake_dummy_vec_env(1, map=map)
-    model_4x4 = DQN.load('./frozenlake_DQN_1/eval/best_model', env=env_4x4)
+    model_4x4 = DQN.load('./frozenlake_DQN_1/eval/best_model')
+    frozen_lake_transfer_learn(predict_model=model_4x4, env=frozen_lake_dummy_vec_env(1, map))
+    '''
     model_4x4.replay_buffer.add()
     obs = env_4x4.reset()
     done = False
@@ -47,6 +49,7 @@ def main():
         env_4x4.render('human')
         print(obs, reward, done, info)
         time.sleep(2)
+    '''
 
 
 
