@@ -154,3 +154,20 @@ class MapResizer:
             return self._shrink_map()
         else:
             return self._grow_map()
+        
+    def set_start(self, obs: int):
+        updated_map = [''] * len(self.map)
+        idx = -1
+        found_old_start = False
+        for i, row in enumerate(self.map):
+            for item in row:
+                idx += 1
+                if not found_old_start and item == "S" and idx != obs:
+                    updated_map[i] += "F"
+                    found_old_start = True
+                elif idx == obs:
+                    updated_map[i] += "S"
+                else:
+                    updated_map[i] += item
+        self.map = updated_map
+        self.start, self.goal = self._find_start_goal()

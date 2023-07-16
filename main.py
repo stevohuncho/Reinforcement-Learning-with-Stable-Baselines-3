@@ -33,23 +33,19 @@ def train_frozenlake(model: DQN = None, n_envs = 1, map: list[str] = None, steps
     
 
 def main():
-    map: list[str] = ['SFFF', 'FFFH', 'FFFF', 'FHFG']
+    map: list[str] = ['FFFF', 'SFFH', 'FFFF', 'FHFG']
     map8x8: list[str] = ['FFFFHHFF', 'FFHFFHFF', 'HFFFFFFF', 'HHFFFFHH', 'GFFFFFFF', 'HHFFFFFF', 'HHFFFFSH', 'HHFFFFHH']
+    log_path_prefix = f'./logs/frozenlake_DQN_{datetime.now().strftime("[%m-%d-%Y]_[%H-%M-%S]")}'
 
-
-    model_4x4 = DQN.load('./frozenlake_DQN_1/eval/best_model')
-    frozen_lake_transfer_learn(predict_model=model_4x4, env=frozen_lake_dummy_vec_env(1, map))
-    '''
-    model_4x4.replay_buffer.add()
-    obs = env_4x4.reset()
-    done = False
-    while not done:
-        action, _states = model_4x4.predict(obs)
-        obs, reward, done, info = env_4x4.step(action)
-        env_4x4.render('human')
-        print(obs, reward, done, info)
-        time.sleep(2)
-    '''
+    predict_model = DQN.load('./frozenlake_DQN_1/eval/best_model')
+    training_model = DQN(
+        "MlpPolicy", 
+        frozen_lake_dummy_vec_env(1, generate_random_map(7)), 
+        verbose=1, 
+        tensorboard_log=f'{log_path_prefix}',
+    )
+    frozen_lake_transfer_learn(predict_model, training_model)
+    
 
 
 
