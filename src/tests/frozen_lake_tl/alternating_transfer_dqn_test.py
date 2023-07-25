@@ -1,31 +1,25 @@
 from stable_baselines3 import DQN
 from gymnasium.envs.toy_text.frozen_lake import generate_random_map
 from datetime import datetime
-from tests.utils import CustomEvalCallback
-from transfer_learning.BasicTransferDQN.dqn import BasicTransferDQN
+from stable_baselines3.common.callbacks import EvalCallback
+from transfer_learning.AlternatingTransferDQN.dqn import AlternatingTransferDQN
 from envs.frozen_lake.frozen_lake import FrozenLakeEnv
+from logger import tf_logger
 import os
 
 MODELS_DIR = "../models"
 PRETRAINED_PATH = "../models/pretrainedFrozenLakeDQN"
 TRANSERED_PATH = "../models/transferedFrozenLakeDQN"
 
-def basic_transfer_dqn_test(
+def alternating_transfer_dqn_test(
     pretrained_steps: int = 1e5,
     transfered_steps: int = 1e5,
-    skip_pretrain_learning_steps: bool = False,
     pretrained_model: DQN = None,
-    transfered_model: BasicTransferDQN = None,
+    transfered_model: AlternatingTransferDQN = None,
+    skip_pretrain_learning_steps: bool = False,
     pretrained_eval_callback: CustomEvalCallback = None,
     transfered_eval_callback: CustomEvalCallback = None,
 ):
-    pretrained_log_path_prefix = f'../logs/frozenlake_DQN_{datetime.now().strftime("[%m-%d-%Y]_[%H-%M-%S]")}'
-    os.makedirs(pretrained_log_path_prefix, exist_ok=True)
-    os.makedirs(f'{pretrained_log_path_prefix}/eval', exist_ok=True)
-    transfered_log_path_prefix = f'../logs/frozenlake_DQN_{datetime.now().strftime("[%m-%d-%Y]_[%H-%M-%S]")}'
-    os.makedirs(transfered_log_path_prefix, exist_ok=True)
-    os.makedirs(f'{transfered_log_path_prefix}/eval', exist_ok=True)
-
     if pretrained_model is None:
         pretrained_model = DQN(
             "MlpPolicy", 
@@ -33,7 +27,7 @@ def basic_transfer_dqn_test(
                 render_mode="rgb_array",
                 fps=4,
             ).dummy_vec_env(1), 
-            tensorboard_log=pretrained_log_path_prefix,
+            tensorboard_log=tf_logger("pretrainedFrozenLakeDQN"),
             buffer_size=int(1e5)
         )
 
@@ -51,7 +45,7 @@ def basic_transfer_dqn_test(
     pretrained_model = DQN.load(PRETRAINED_PATH)
 
     if transfered_model is None:
-        transfered_model = BasicTransferDQN(
+        transfered_model = AlternatingTransferDQN(
             "MlpPolicy", 
             FrozenLakeEnv(
                 render_mode="rgb_array",
@@ -59,7 +53,7 @@ def basic_transfer_dqn_test(
                 desc=generate_random_map(8,0.9),
             ).dummy_vec_env(1),
             pretrained_model=pretrained_model, 
-            tensorboard_log=transfered_log_path_prefix,
+            tensorboard_log=tf_logger("transferedFrozenLakeDQN"),
             buffer_size=int(1e5)
         )
 

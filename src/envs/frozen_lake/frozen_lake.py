@@ -215,6 +215,9 @@ class FrozenLakeEnv(Env):
     metadata = {
         "render_modes": ["human", "ansi", "rgb_array"],
         "render_fps": 4,
+        "goal_reward": 1,
+        "frozen_tile_reward": 0,
+        "hole_reward": 0
     }
 
     def __init__(
@@ -237,9 +240,9 @@ class FrozenLakeEnv(Env):
         self.nrow, self.ncol = nrow, ncol = desc.shape
         self.reward_range = reward_range
         self.metadata['render_fps'] = fps
-        self.goal_reward = goal_reward
-        self.frozen_tile_reward = frozen_tile_reward
-        self.hole_reward = hole_reward
+        self.metadata['goal_reward'] = goal_reward
+        self.metadata['frozen_tile_reward'] = frozen_tile_reward
+        self.metadata['hole_reward'] = hole_reward
         self.is_slippery = is_slippery
         self.map_name = map_name
 
@@ -271,11 +274,11 @@ class FrozenLakeEnv(Env):
             newletter = desc[newrow, newcol]
             terminated = bytes(newletter) in b"GH"
             if newletter == b"G":
-                reward = float(self.goal_reward)
+                reward = float(self.metadata['goal_reward'])
             elif newletter == b"H":
-                reward = float(self.hole_reward)
+                reward = float(self.metadata['hole_reward'])
             else:
-                reward = float(self.frozen_tile_reward)
+                reward = float(self.metadata['frozen_tile_reward'])
             return newstate, reward, terminated
 
         for row in range(nrow):
@@ -493,9 +496,9 @@ class FrozenLakeEnv(Env):
             self.is_slippery,
             self.metadata['render_fps'],
             self.reward_range,
-            self.goal_reward,
-            self.frozen_tile_reward,
-            self.hole_reward
+            self.metadata['goal_reward'],
+            self.metadata['frozen_tile_reward'],
+            self.metadata['hole_reward']
         )
         def _init():
             env.reset(seed=seed + rank)
