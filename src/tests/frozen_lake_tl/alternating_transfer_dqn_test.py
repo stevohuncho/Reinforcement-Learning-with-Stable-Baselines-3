@@ -1,10 +1,9 @@
 from stable_baselines3 import DQN
 from gymnasium.envs.toy_text.frozen_lake import generate_random_map
-from datetime import datetime
-from stable_baselines3.common.callbacks import EvalCallback
+from tests.utils import CustomEvalCallback
 from transfer_learning.AlternatingTransferDQN.dqn import AlternatingTransferDQN
 from envs.frozen_lake.frozen_lake import FrozenLakeEnv
-from logger import tf_logger
+from logger import Logger
 import os
 
 MODELS_DIR = "../models"
@@ -19,7 +18,11 @@ def alternating_transfer_dqn_test(
     skip_pretrain_learning_steps: bool = False,
     pretrained_eval_callback: CustomEvalCallback = None,
     transfered_eval_callback: CustomEvalCallback = None,
+    logger: Logger = None,
 ):
+    if logger is not None:
+        logger = Logger("")
+
     if pretrained_model is None:
         pretrained_model = DQN(
             "MlpPolicy", 
@@ -27,7 +30,7 @@ def alternating_transfer_dqn_test(
                 render_mode="rgb_array",
                 fps=4,
             ).dummy_vec_env(1), 
-            tensorboard_log=tf_logger("pretrainedFrozenLakeDQN"),
+            tensorboard_log= logger.tf_logger("pretrainedFrozenLakeDQN"),
             buffer_size=int(1e5)
         )
 
@@ -36,7 +39,7 @@ def alternating_transfer_dqn_test(
             pretrained_steps, 
             log_interval=1, 
             progress_bar=True,
-            eval_callback=pretrained_eval_callback.create(pretrained_model.get_env()),
+            callback=pretrained_eval_callback.create(pretrained_model.get_env()),
         )
 
     os.makedirs(MODELS_DIR, exist_ok=True)
@@ -53,7 +56,7 @@ def alternating_transfer_dqn_test(
                 desc=generate_random_map(8,0.9),
             ).dummy_vec_env(1),
             pretrained_model=pretrained_model, 
-            tensorboard_log=tf_logger("transferedFrozenLakeDQN"),
+            tensorboard_log= logger.tf_logger("transferedFrozenLakeDQN"),
             buffer_size=int(1e5)
         )
 
@@ -61,7 +64,7 @@ def alternating_transfer_dqn_test(
         transfered_steps, 
         log_interval=1, 
         progress_bar=True,
-        eval_callback=transfered_eval_callback.create(transfered_model.get_env()),
+        callback=transfered_eval_callback.create(transfered_model.get_env()),
     )
     os.makedirs(MODELS_DIR, exist_ok=True)
     transfered_model.save(TRANSERED_PATH)

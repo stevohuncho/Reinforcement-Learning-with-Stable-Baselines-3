@@ -55,15 +55,22 @@ class CustomEvalCallback():
     def create(
         self,
         env: Union[gym.Env, VecEnv],
+        log_path: Optional[str] = None,
+        best_model_save_path: Optional[str] = None,
     ) -> EvalCallback:
-        EvalCallback(
+        if self.log_path != None and log_path == None:
+            log_path = self.log_path
+        if self.best_model_save_path != None and best_model_save_path == None:
+            best_model_save_path = self.best_model_save_path
+
+        return EvalCallback(
             env,
             self.callback_on_new_best,
             self.callback_after_eval,
             self.n_eval_episodes,
             self.eval_freq,
-            self.log_path,
-            self.best_model_save_path,
+            log_path,
+            best_model_save_path,
             self.deterministic,
             self.render,
             self.verbose,
