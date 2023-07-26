@@ -1,5 +1,6 @@
 from tests.tl_vs_no_tl import tl_vs_no_tl
 from envs.frozen_lake.frozen_lake import generate_random_map, FrozenLakeEnv
+from matplot import plot_eval_rewards_tl
 from tests.utils import CustomEvalCallback
 from stable_baselines3 import DQN
 from constants import MODELS_DIR
@@ -37,7 +38,7 @@ def main():
         pretrained_4x4_model_w_rs = pretrained_4x4_model_w_rs.learn(
             total_timesteps=TRAINING_TIMESTEPS,
             progress_bar=True,
-            callback=CustomEvalCallback().create(
+            callback=CustomEvalCallback(n_eval_episodes=20).create(
                 env=pretrained_4x4_env_w_rs,
                 best_model_save_path=f'{MODELS_DIR}/pretrained_4x4_env_w_rs',
                 log_path=f'{MODELS_DIR}/pretrained_4x4_env_w_rs'
@@ -62,7 +63,7 @@ def main():
         pretrained_4x4_model_wo_rs = pretrained_4x4_model_wo_rs.learn(
             total_timesteps=TRAINING_TIMESTEPS,
             progress_bar=True,
-            callback=CustomEvalCallback().create(
+            callback=CustomEvalCallback(n_eval_episodes=20).create(
                 env=pretrained_4x4_env_wo_rs,
                 best_model_save_path=f'{MODELS_DIR}/pretrained_4x4_env_wo_rs',
                 log_path=f'{MODELS_DIR}/pretrained_4x4_env_wo_rs'
@@ -88,7 +89,7 @@ def main():
         pretrained_6x6_model_w_rs = pretrained_6x6_model_w_rs.learn(
             total_timesteps=TRAINING_TIMESTEPS,
             progress_bar=True,
-            callback=CustomEvalCallback().create(
+            callback=CustomEvalCallback(n_eval_episodes=20).create(
                 env=pretrained_6x6_env_w_rs,
                 best_model_save_path=f'{MODELS_DIR}/pretrained_6x6_env_w_rs',
                 log_path=f'{MODELS_DIR}/pretrained_6x6_env_w_rs'
@@ -113,7 +114,7 @@ def main():
         pretrained_6x6_model_wo_rs = pretrained_6x6_model_wo_rs.learn(
             total_timesteps=TRAINING_TIMESTEPS,
             progress_bar=True,
-            callback=CustomEvalCallback().create(
+            callback=CustomEvalCallback(n_eval_episodes=20).create(
                 env=pretrained_6x6_env_wo_rs,
                 best_model_save_path=f'{MODELS_DIR}/pretrained_6x6_env_wo_rs',
                 log_path=f'{MODELS_DIR}/pretrained_6x6_env_wo_rs'
@@ -139,7 +140,7 @@ def main():
         pretrained_8x8_model_w_rs = pretrained_8x8_model_w_rs.learn(
             total_timesteps=TRAINING_TIMESTEPS,
             progress_bar=True,
-            callback=CustomEvalCallback().create(
+            callback=CustomEvalCallback(n_eval_episodes=20).create(
                 env=pretrained_8x8_env_w_rs,
                 best_model_save_path=f'{MODELS_DIR}/pretrained_8x8_env_w_rs',
                 log_path=f'{MODELS_DIR}/pretrained_8x8_env_w_rs'
@@ -164,7 +165,7 @@ def main():
         pretrained_8x8_model_wo_rs = pretrained_8x8_model_wo_rs.learn(
             total_timesteps=TRAINING_TIMESTEPS,
             progress_bar=True,
-            callback=CustomEvalCallback().create(
+            callback=CustomEvalCallback(n_eval_episodes=20).create(
                 env=pretrained_8x8_env_wo_rs,
                 best_model_save_path=f'{MODELS_DIR}/pretrained_8x8_env_wo_rs',
                 log_path=f'{MODELS_DIR}/pretrained_8x8_env_wo_rs'
@@ -182,7 +183,6 @@ def main():
     if not os.path.isfile(f'{MODELS_DIR}/transfered_4x4_to_6x6_env_w_rs/best_model.zip') or not os.path.isfile(f'{MODELS_DIR}/non_transfered_4x4_to_6x6_env_w_rs/best_model.zip'):
         tl_vs_no_tl(
             pretrained_4x4_model_w_rs,
-            f'{MODELS_DIR}/pretrained_4x4_to_6x6_env_w_rs',
             f'{MODELS_DIR}/transfered_4x4_to_6x6_env_w_rs',
             f'{MODELS_DIR}/non_transfered_4x4_to_6x6_env_w_rs',
             map_pretrain=map_4x4,
@@ -193,7 +193,6 @@ def main():
     if not os.path.isfile(f'{MODELS_DIR}/transfered_4x4_to_6x6_env_wo_rs/best_model.zip') or not os.path.isfile(f'{MODELS_DIR}/non_transfered_4x4_to_6x6_env_wo_rs/best_model.zip'):
         tl_vs_no_tl(
             pretrained_4x4_model_wo_rs,
-            f'{MODELS_DIR}/pretrained_4x4_to_6x6_env_wo_rs',
             f'{MODELS_DIR}/transfered_4x4_to_6x6_env_wo_rs',
             f'{MODELS_DIR}/non_transfered_4x4_to_6x6_env_wo_rs',
             map_pretrain=map_4x4,
@@ -203,7 +202,6 @@ def main():
     if not os.path.isfile(f'{MODELS_DIR}/transfered_4x4_to_8x8_env_w_rs/best_model.zip') or not os.path.isfile(f'{MODELS_DIR}/non_transfered_4x4_to_8x8_env_w_rs/best_model.zip'):
         tl_vs_no_tl(
             pretrained_4x4_model_w_rs,
-            f'{MODELS_DIR}/pretrained_4x4_to_8x8_env_w_rs',
             f'{MODELS_DIR}/transfered_4x4_to_8x8_env_w_rs',
             f'{MODELS_DIR}/non_transfered_4x4_to_8x8_env_w_rs',
             map_pretrain=map_4x4,
@@ -214,7 +212,6 @@ def main():
     if not os.path.isfile(f'{MODELS_DIR}/transfered_4x4_to_8x8_env_wo_rs/best_model.zip') or not os.path.isfile(f'{MODELS_DIR}/non_transfered_4x4_to_8x8_env_wo_rs/best_model.zip'):
         tl_vs_no_tl(
             pretrained_4x4_model_wo_rs,
-            f'{MODELS_DIR}/pretrained_4x4_to_8x8_env_wo_rs',
             f'{MODELS_DIR}/transfered_4x4_to_8x8_env_wo_rs',
             f'{MODELS_DIR}/non_transfered_4x4_to_8x8_env_wo_rs',
             map_pretrain=map_4x4,
@@ -225,7 +222,6 @@ def main():
     if not os.path.isfile(f'{MODELS_DIR}/transfered_8x8_to_4x4_env_w_rs/best_model.zip') or not os.path.isfile(f'{MODELS_DIR}/non_transfered_8x8_to_4x4_env_w_rs/best_model.zip'):
         tl_vs_no_tl(
             pretrained_8x8_model_w_rs,
-            f'{MODELS_DIR}/pretrained_8x8_to_4x4_env_w_rs',
             f'{MODELS_DIR}/transfered_8x8_to_4x4_env_w_rs',
             f'{MODELS_DIR}/non_transfered_8x8_to_4x4_env_w_rs',
             map_pretrain=map_8x8,
@@ -236,7 +232,6 @@ def main():
     if not os.path.isfile(f'{MODELS_DIR}/transfered_8x8_to_4x4_env_wo_rs/best_model.zip') or not os.path.isfile(f'{MODELS_DIR}/non_transfered_8x8_to_4x4_env_wo_rs/best_model.zip'):
         tl_vs_no_tl(
             pretrained_8x8_model_wo_rs,
-            f'{MODELS_DIR}/pretrained_8x8_to_4x4_env_wo_rs',
             f'{MODELS_DIR}/transfered_8x8_to_4x4_env_wo_rs',
             f'{MODELS_DIR}/non_transfered_8x8_to_4x4_env_wo_rs',
             map_pretrain=map_8x8,
@@ -246,7 +241,6 @@ def main():
     if not os.path.isfile(f'{MODELS_DIR}/transfered_8x8_to_6x6_env_w_rs/best_model.zip') or not os.path.isfile(f'{MODELS_DIR}/non_transfered_8x8_to_6x6_env_w_rs/best_model.zip'):
         tl_vs_no_tl(
             pretrained_8x8_model_w_rs,
-            f'{MODELS_DIR}/pretrained_8x8_to_6x6_env_w_rs',
             f'{MODELS_DIR}/transfered_8x8_to_6x6_env_w_rs',
             f'{MODELS_DIR}/non_transfered_8x8_to_6x6_env_w_rs',
             map_pretrain=map_8x8,
@@ -257,13 +251,53 @@ def main():
     if not os.path.isfile(f'{MODELS_DIR}/transfered_8x8_to_6x6_env_wo_rs/best_model.zip') or not os.path.isfile(f'{MODELS_DIR}/non_transfered_8x8_to_6x6_env_wo_rs/best_model.zip'):
         tl_vs_no_tl(
             pretrained_8x8_model_wo_rs,
-            f'{MODELS_DIR}/pretrained_8x8_to_6x6_env_wo_rs',
             f'{MODELS_DIR}/transfered_8x8_to_6x6_env_wo_rs',
             f'{MODELS_DIR}/non_transfered_8x8_to_6x6_env_wo_rs',
             map_pretrain=map_8x8,
             map_transfer=map_6x6,
         )
 
+    # plot data
+    plot_eval_rewards_tl(
+        [f'{MODELS_DIR}/non_transfered_4x4_to_6x6_env_w_rs', f'{MODELS_DIR}/transfered_4x4_to_6x6_env_w_rs', f'{MODELS_DIR}/pretrained_4x4_env_w_rs'],
+        "4x4 To 6x6 Mean Evaluations w/ Reward Shaping",
+        "red"
+    )
+    plot_eval_rewards_tl(
+        [f'{MODELS_DIR}/non_transfered_4x4_to_6x6_env_wo_rs', f'{MODELS_DIR}/transfered_4x4_to_6x6_env_wo_rs', f'{MODELS_DIR}/pretrained_4x4_env_wo_rs'],
+        "4x4 To 6x6 Mean Evaluations wo/ Reward Shaping",
+        "blue"
+    )
+    plot_eval_rewards_tl(
+        [f'{MODELS_DIR}/non_transfered_4x4_to_8x8_env_w_rs', f'{MODELS_DIR}/transfered_4x4_to_8x8_env_w_rs', f'{MODELS_DIR}/pretrained_4x4_env_w_rs'],
+        "4x4 To 8x8 Mean Evaluations w/ Reward Shaping",
+        "red"
+    )
+    plot_eval_rewards_tl(
+        [f'{MODELS_DIR}/non_transfered_4x4_to_8x8_env_wo_rs', f'{MODELS_DIR}/transfered_4x4_to_8x8_env_wo_rs', f'{MODELS_DIR}/pretrained_4x4_env_wo_rs'],
+        "4x4 To 8x8 Mean Evaluations wo/ Reward Shaping",
+        "blue"
+    )
+    plot_eval_rewards_tl(
+        [f'{MODELS_DIR}/non_transfered_8x8_to_6x6_env_w_rs', f'{MODELS_DIR}/transfered_8x8_to_6x6_env_w_rs', f'{MODELS_DIR}/pretrained_8x8_env_w_rs'],
+        "8x8 To 6x6 Mean Evaluations w/ Reward Shaping",
+        "red"
+    )
+    plot_eval_rewards_tl(
+        [f'{MODELS_DIR}/non_transfered_8x8_to_6x6_env_wo_rs', f'{MODELS_DIR}/transfered_8x8_to_6x6_env_wo_rs', f'{MODELS_DIR}/pretrained_8x8_env_wo_rs'],
+        "8x8 To 6x6 Mean Evaluations wo/ Reward Shaping",
+        "blue"
+    )
+    plot_eval_rewards_tl(
+        [f'{MODELS_DIR}/non_transfered_8x8_to_4x4_env_w_rs', f'{MODELS_DIR}/transfered_8x8_to_4x4_env_w_rs', f'{MODELS_DIR}/pretrained_8x8_env_w_rs'],
+        "8x8 To 8x8 Mean Evaluations w/ Reward Shaping",
+        "red"
+    )
+    plot_eval_rewards_tl(
+        [f'{MODELS_DIR}/non_transfered_8x8_to_4x4_env_wo_rs', f'{MODELS_DIR}/transfered_8x8_to_4x4_env_wo_rs', f'{MODELS_DIR}/pretrained_8x8_env_wo_rs'],
+        "8x8 To 4x4 Mean Evaluations wo/ Reward Shaping",
+        "blue"
+    )
 
     
 if __name__ == "__main__":

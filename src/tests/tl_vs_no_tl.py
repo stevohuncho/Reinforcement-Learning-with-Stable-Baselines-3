@@ -13,14 +13,13 @@ import os
 
 def tl_vs_no_tl(
     pretrained_model: DQN,
-    pretrained_dir: str,
     transfered_dir: str,
     non_transfered_dir: str,
     steps: int = 1e5, 
     pretrain_map_size: int = 4, 
     transfer_map_size: int = 8, 
     map_p: float = 0.8,
-    transfer_method: Literal["Basic", "Alternating"] = "Basic",
+    transfer_method: Literal["Basic", "Alternating"] = "Alternating",
     is_slippery: bool = True,
     fps: int = 4,
     reward_range: tuple = (0, 1),
@@ -50,7 +49,7 @@ def tl_vs_no_tl(
         hole_reward = hole_reward
     ).dummy_vec_env(1)
 
-    non_transfered_eval_callback = CustomEvalCallback().create(
+    non_transfered_eval_callback = CustomEvalCallback(n_eval_episodes=20).create(
         non_transfered_env,
         non_transfered_dir,
         non_transfered_dir
@@ -92,7 +91,7 @@ def tl_vs_no_tl(
             env=transfered_env,
         )
 
-    transfered_eval_callback = CustomEvalCallback().create(
+    transfered_eval_callback = CustomEvalCallback(n_eval_episodes=20).create(
         transfered_env,
         transfered_dir,
         transfered_dir
