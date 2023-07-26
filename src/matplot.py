@@ -24,7 +24,7 @@ def plot_eval_rewards_tl(path: str, title: str, color: str) -> None:
 
     plt.figure(figsize=(15,5))
     plt.xticks(range(len(non_transfered_data['timesteps'])), non_transfered_data['timesteps'])
-    plt.ylim(0,1)
+    plt.ylim(bottom=0)
 
     non_transfered_arr[non_transfered_arr < 0.] = 0.
     plt.plot(_gather_eval_rewards(non_transfered_arr), label="Non Transfered Model", linestyle="-.", color=color)
