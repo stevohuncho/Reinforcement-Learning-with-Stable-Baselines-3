@@ -5,15 +5,15 @@ from stable_baselines3 import DQN
 from stable_baselines3.common.monitor import Monitor
 from envs.frozen_lake.frozen_lake import FrozenLakeEnv
 from logger import Logger
-from constants import NON_TRANSERED_PATH, TRANSERED_PATH
-from tests.utils import eval_model, CustomEvalCallback
+from constants import NON_TRANSERED_PATH
+from tests.utils import CustomEvalCallback
 from typing import Literal, List
+from matplot import plot_eval_rewards_tl
 import os
 
 def tl_vs_no_tl(
     steps: int = 1e5, 
     pretrain_steps: int = 1e5,
-    eval_eps: int = 100, 
     pretrain_map_size: int = 4, 
     transfer_map_size: int = 8, 
     map_p: float = 0.8,
@@ -137,27 +137,4 @@ def tl_vs_no_tl(
             logger=logger
         )
 
-    eval_env = FrozenLakeEnv(
-        render_mode="rgb_array",
-        desc=map_transfer_test,
-        is_slippery = is_slippery,
-        fps = fps,
-        reward_range = reward_range,
-        goal_reward = goal_reward,
-        frozen_tile_reward = frozen_tile_reward,
-        hole_reward = hole_reward
-    ).dummy_vec_env(1)
-
-    print("Showing non transfered model")
-    eval_model(
-        DQN.load(NON_TRANSERED_PATH),
-        eval_env,
-        eval_eps
-    )
-
-    print("Showing transfered model")
-    eval_model(
-        DQN.load(TRANSERED_PATH),
-        eval_env,
-        eval_eps
-    )
+    plot_eval_rewards_tl(logger.get_dir(), f'{pretrain_map_size}x{pretrain_map_size} to {transfer_map_size}x{transfer_map_size} Mean Eval Rewards {"wo/" if hole_reward == 0 else "w/"} Reward Shaping', 'red' if hole_reward != 0 else 'blue')

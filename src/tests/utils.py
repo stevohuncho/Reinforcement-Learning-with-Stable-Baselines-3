@@ -3,6 +3,7 @@ from stable_baselines3.common.vec_env import VecEnv
 from stable_baselines3.common.callbacks import EvalCallback, BaseCallback
 from typing import Optional, Union
 import gymnasium as gym
+import time
 
 def visually_test_model(model: DQN , env: VecEnv, steps: int = 1e5):
     obs = env.reset()
@@ -23,8 +24,8 @@ def eval_model(model: DQN , env: VecEnv, eps: int = 100):
             steps_taken = info[0]['terminal_observation']
             total_rew += rewards[0]
             completed_eps += 1
-            print(f'\r  Episode #{completed_eps} Completed. {steps_taken} Steps Taken. +{rewards[0]} Reward.', end="\r")
-        env.render("human")  
+            print(f'\r  Episode #{completed_eps} Completed. {steps_taken} Steps Taken. +{rewards[0]} Reward. Total Rewards {total_rew}.', end="\r")
+        env.render("rgb_array")
     print(f"\n{'{:0.2f}'.format(total_rew/float(eps) * 100)}% Eval Success Rate!")
 
 class CustomEvalCallback():
@@ -38,7 +39,7 @@ class CustomEvalCallback():
         best_model_save_path: Optional[str] = None,
         deterministic: bool = True,
         render: bool = False,
-        verbose: int = 1,
+        verbose: int = 0,
         warn: bool = True,
     ) -> None:
         self.callback_on_new_best = callback_on_new_best
