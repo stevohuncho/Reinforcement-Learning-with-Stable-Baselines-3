@@ -290,7 +290,7 @@ def main():
     )
     plot_eval_rewards_tl(
         [f'{MODELS_DIR}/non_transfered_8x8_to_4x4_env_w_rs', f'{MODELS_DIR}/transfered_8x8_to_4x4_env_w_rs', f'{MODELS_DIR}/pretrained_8x8_env_w_rs'],
-        "8x8 To 8x8 Mean Evaluations w/ Reward Shaping",
+        "8x8 To 4x4 Mean Evaluations w/ Reward Shaping",
         "red"
     )
     plot_eval_rewards_tl(
